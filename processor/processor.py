@@ -41,8 +41,8 @@ def do_train(cfg,
     evaluator = R1_mAP_eval(num_query, max_rank=50, feat_norm=cfg.TEST.FEAT_NORM)
     scaler = amp.GradScaler()
     # Initialize EMA model
-    ema_model = ModelEMA(model, decay=0.9998)
-    logger.info('Using EMA with decay=0.9998')
+    ema_model = ModelEMA(model, decay=0.9995)
+    logger.info('Using EMA with decay=0.9995')
     # train
     for epoch in range(1, epochs + 1):
         start_time = time.time()
