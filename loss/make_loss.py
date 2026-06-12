@@ -61,7 +61,8 @@ def make_loss(cfg, num_classes):    # modified by gu
                     total_loss = cfg.MODEL.ID_LOSS_WEIGHT * ID_LOSS + \
                                cfg.MODEL.TRIPLET_LOSS_WEIGHT * TRI_LOSS
 
-                    # Center loss: pull features toward class centers for intra-class compactness
+                    # Center loss: pull global features toward class centers
+                    # Only global branch — JPM parts have distinct feature distributions
                     if 'center' in cfg.MODEL.METRIC_LOSS_TYPE:
                         if isinstance(feat, list):
                             CENTER_LOSS = center_criterion(feat[0], target)
@@ -90,7 +91,7 @@ def make_loss(cfg, num_classes):    # modified by gu
 
                     if 'center' in cfg.MODEL.METRIC_LOSS_TYPE:
                         if isinstance(feat, list):
-                            CENTER_LOSS = center_criterion(feat[0], target)
+                            CENTER_LOSS = sum(center_criterion(f, target) for f in feat) / len(feat)
                         else:
                             CENTER_LOSS = center_criterion(feat, target)
                         total_loss += cfg.SOLVER.CENTER_LOSS_WEIGHT * CENTER_LOSS
